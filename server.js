@@ -8,6 +8,11 @@ require('dotenv').config();
 const app = express();
 
 /* ════════════════════════════════════════
+   🔥 PUERTO (DEBE IR ARRIBA)
+════════════════════════════════════════ */
+const PORT = process.env.PORT || 5000;
+
+/* ════════════════════════════════════════
    🔥 CONFIGURACIÓN DE MULTER (UPLOADS)
 ════════════════════════════════════════ */
 
@@ -44,12 +49,8 @@ const upload = multer({
    🔥 MIDDLEWARES
 ════════════════════════════════════════ */
 
-// CORS
-app.use(cors({
-  origin: 'http://localhost:3000',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
-}));
+// ✅ CORS habilitado para producción
+app.use(cors());
 
 // JSON
 app.use(express.json());
@@ -66,7 +67,10 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
     return res.status(400).json({ error: 'No se recibió imagen' });
   }
 
-  const baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
+  const baseUrl =
+    process.env.BASE_URL ||
+    `https://librosmed-backend-production.up.railway.app`;
+
   const url = `${baseUrl}/uploads/${req.file.filename}`;
 
   res.json({
@@ -95,8 +99,6 @@ app.get('/api/health', (req, res) => {
    🔥 SERVIDOR
 ════════════════════════════════════════ */
 
-const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });
