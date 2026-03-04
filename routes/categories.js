@@ -5,9 +5,17 @@ const pool = require('../db');
 // GET todas las categorías
 router.get('/', async (req, res) => {
   try {
-    const result = await pool.query(
-      'SELECT c.*, COUNT(p.id) as product_count FROM categories c LEFT JOIN products p ON c.id = p.category_id GROUP BY c.id ORDER BY c.name'
-    );
+    const result = await pool.query(`
+  SELECT 
+    c.id,
+    c.name,
+    c.slug,
+    COUNT(p.id) AS product_count
+  FROM categories c
+  LEFT JOIN products p ON c.id = p.category_id
+  GROUP BY c.id, c.name, c.slug
+  ORDER BY c.name
+`);
     res.json(result.rows);
   } catch (err) {
     console.error(err);
