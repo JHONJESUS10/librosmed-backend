@@ -46,11 +46,13 @@ const upload = multer({
 
 // CORS
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    'https://librosmed-frontend.vercel.app',
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));
-
 // JSON
 app.use(express.json());
 
@@ -66,7 +68,11 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
     return res.status(400).json({ error: 'No se recibió imagen' });
   }
 
-  const url = `http://localhost:${process.env.PORT || 5000}/uploads/${req.file.filename}`;
+  const baseUrl = process.env.RAILWAY_PUBLIC_DOMAIN
+  ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
+  : `http://localhost:${process.env.PORT || 5000}`;
+
+const url = `${baseUrl}/uploads/${req.file.filename}`;
 
   res.json({
     url,
