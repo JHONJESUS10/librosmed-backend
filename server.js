@@ -67,6 +67,7 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No se recibió imagen' });
   }
+app.use('/api/auth', require('./routes/auth'));
 
   const baseUrl = process.env.RAILWAY_PUBLIC_DOMAIN
   ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
@@ -87,6 +88,7 @@ const url = `${baseUrl}/uploads/${req.file.filename}`;
 app.use('/api/categories', require('./routes/categories'));
 app.use('/api/products', require('./routes/products'));
 app.use('/api/orders', require('./routes/orders'));
+app.use('/api/auth', require('./routes/auth'));
 
 /* ════════════════════════════════════════
    🔥 RUTA DE PRUEBA
